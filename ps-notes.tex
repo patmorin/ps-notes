@@ -195,7 +195,9 @@ For a graph $G$ that contains a graph $M$ as a minor, a \defin{model} of $M$ in 
 
 \subsection{Tightness}
 
-Can we prove that \cref{lousy_theorem} is tight?  Is it true that every $G\in \mathcal{G}_t$ contains a $\boxplus_k$ minor for $k\in\Omega(\sqrt{\tw(G)})$?  Here are two results proving the existence of large grid minors (actually subdivisions) in graph products.  Some of what comes next might be helpful, but there are too many distractions right now to think about whether they are actually helpful.  For a graph $G$, let $\gs(G)$ be the largest value $k$ such that $G$ contains a subdivision of $\boxplus_k$.  Clearly $\gm(G)\ge\gs(G)$.
+Can we prove that \cref{lousy_theorem} is tight?  Is it true that every $G\in \mathcal{G}_t$ contains a $\boxplus_k$ minor for $k\in\Omega(\sqrt{\tw(G)})$?  In general, the strongest \emph{Excluded Grid Theorem} for geneneral graphs states that any graph $G$ contains a $\boxplus_{k}$ minor for $k\in\tilde{\Omega}(\tw(G)^{1/9})$ \cite{chuzhoy.tan:towards}.  So we're asking for a much stronger Excluded Grid Theorem for graphs in $\mathcal{G}_t$.
+
+Here are two results proving the existence of large grid minors (actually subdivisions) in graph products.  Some of what comes next might be helpful, but remember that $\mathcal{G}_t$ doesn't just contain products, it also contains all their subgraphs.  For a graph $G$, let $\gs(G)$ be the largest value $k$ such that $G$ contains a subdivision of $\boxplus_k$.  Clearly $\gm(G)\ge\gs(G)$.
 
 % Does there exists a constant $C$ such that $\gm(H\boxtimes P)=k$ implies that $
 
@@ -247,8 +249,8 @@ Can we prove that \cref{lousy_theorem} is tight?  Is it true that every $G\in \m
 
 % Alternatively, if $G$ has treewidth at least $\alpha t^c$ ($k$) then $G$ contains a $t\times t$ grid minor.
 
-Does the following question even make sense?
-
+We can also ask if the SQGM property implies product structure:
+ 
 \begin{op}
   Let $\mathcal{G}$ be a graph family with the property that, for some fixed $\epsilon >0$, $\gm(G)\in\Omega(\tw(G)^{1/2+\epsilon})$, for each $G\in\mathcal{G}$.  Does this imply that that, for each $G\in\mathcal{G}$, $G\subseteq H\boxtimes P$ for some graph $H$ of treewidth at most $t:=t(\mathcal{G})$ and some path $P$?
 \end{op}
