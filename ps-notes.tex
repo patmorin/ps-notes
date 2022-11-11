@@ -1,0 +1,303 @@
+\documentclass{patmorin}
+\listfiles
+\usepackage{pat}
+\usepackage{paralist}
+\usepackage{dsfont}  % for \mathds{A}
+\usepackage[utf8x]{inputenc}
+\usepackage{skull}
+\usepackage{paralist}
+\usepackage{graphicx}
+\usepackage[noend]{algorithmic}
+
+\usepackage[normalem]{ulem}
+\usepackage{cancel}
+\usepackage{enumitem}
+
+\newcommand{\defin}[1]{\textcolor{Maroon}{\emph{#1}}}
+
+\usepackage{todonotes}
+
+\usepackage[longnamesfirst,numbers,sort&compress]{natbib}
+
+\usepackage[mathlines]{lineno}
+\setlength{\linenumbersep}{2em}
+% \linenumbers
+% \rightlinenumbers
+% \linenumbers
+\newcommand*\patchAmsMathEnvironmentForLineno[1]{%
+ \expandafter\let\csname old#1\expandafter\endcsname\csname #1\endcsname
+ \expandafter\let\csname oldend#1\expandafter\endcsname\csname end#1\endcsname
+ \renewenvironment{#1}%
+    {\linenomath\csname old#1\endcsname}%
+    {\csname oldend#1\endcsname\endlinenomath}}%
+\newcommand*\patchBothAmsMathEnvironmentsForLineno[1]{%
+ \patchAmsMathEnvironmentForLineno{#1}%
+ \patchAmsMathEnvironmentForLineno{#1*}}%
+\AtBeginDocument{%
+\patchBothAmsMathEnvironmentsForLineno{equation}%
+\patchBothAmsMathEnvironmentsForLineno{align}%
+\patchBothAmsMathEnvironmentsForLineno{flalign}%
+\patchBothAmsMathEnvironmentsForLineno{alignat}%
+\patchBothAmsMathEnvironmentsForLineno{gather}%
+\patchBothAmsMathEnvironmentsForLineno{multline}%
+}
+
+
+\newcommand{\coloured}[2]{{\color{#1}{#2}}}
+\newenvironment{colourblock}[1]{\color{#1}}{}
+
+\newcommand{\condref}[1]{(C\ref{#1})}
+
+% Taken from
+% https://tex.stackexchange.com/questions/42726/align-but-show-one-equation-number-at-the-end
+\newcommand\numberthis{\addtocounter{equation}{1}\tag{\theequation}}
+
+
+\setlength{\parskip}{1ex}
+
+
+\DeclareMathOperator{\diam}{diam}
+\DeclareMathOperator{\tw}{tw}
+\DeclareMathOperator{\gm}{gm}
+\DeclareMathOperator{\gs}{gs}
+\DeclareMathOperator{\stw}{stw}
+\DeclareMathOperator{\ltw}{ltw}
+\DeclareMathOperator{\pw}{pw}
+\DeclareMathOperator{\lpw}{lpw}
+\DeclareMathOperator{\lhptw}{lhp-tw}
+\DeclareMathOperator{\lhppw}{lhp-pw}
+
+\DeclareMathOperator{\x}{x}
+\DeclareMathOperator{\depth}{d}
+\DeclareMathOperator{\sh}{cbt}
+\DeclareMathOperator{\cbt}{cbt}
+\DeclareMathOperator{\sgn}{sgn}
+\DeclareMathOperator{\dc}{dc}
+\DeclareMathOperator{\afci}{\overline{\chi}_\pi}
+\DeclareMathOperator{\afcn}{\dot{\chi}_\pi}
+
+\newcommand{\ellt}{{\lfloor\ell/2\rfloor}}
+
+\title{\MakeUppercase{Notes on Product Structure}\thanks{This research was partly funded by NSERC.}}
+\author{Vida Dujmović%
+    \thanks{Department of Computer Science and Electrical Engineering, University of Ottawa}\qquad
+    Pat Morin%
+    \thanks{School of Computer Science, Carleton University}}
+
+\date{}
+
+\DeclareMathOperator{\ddiv}{div}
+\DeclareMathOperator{\hist}{h}
+
+\newcommand{\colored}[2]{{\color{#1}#2}}
+
+\usepackage{tabularx}
+
+\DeclareMathOperator{\ci}{\overline{\pi}}
+
+\begin{document}
+
+\begin{titlepage}
+\maketitle
+
+\begin{abstract}
+  This is a collection of notes and observations about product structure.
+\end{abstract}
+\end{titlepage}
+
+\pagenumbering{roman}
+\tableofcontents
+
+\newpage
+\pagenumbering{arabic}
+
+
+
+\section{Introduction}
+
+This is a collection of notes and observations about product structure.
+
+\newpage
+
+\section{Product Structure Does Not Imply Subquadratic Grid Minors}
+
+Let $\boxplus_g$ denote the $g\times g$ grid graph.
+For a graph $G$, let $\tw(G)$ denote the treewidth of $G$ and let $\gm(G)$ denote the largest value $g$ such that $G$ contains a $\boxplus_g$ minor.
+A family of graphs $\mathcal{G}$ has the \defin{subquadratic grid minor property (SQGM) property} if there exists a constant $\alpha =\alpha(\mathcal{G}) > 1/2$ such that $\gm(G)\in\Omega(\tw(G)^{\alpha})$ for every $G\in\mathcal{G}$. For example, every planar graph $G$ contains an $\Omega(\tw(G))\times\Omega(\tw(G))$ grid minor, so $\gm(G)\in\Omega(\tw(G))$, so the family of planar graphs has the SQGM Property (with $\alpha=1$).
+% (Equivalently, $\tw(G)\in O(\gm(G)^{1/\alpha})$.
+The SQGM property is extremely useful from an algorithmic perspective and allows many so-called \emph{bidimensional problems} to be solved efficiently on any graph family with the SQGM property \cite{fomin.lokshtanov.ea:excluded}.
+
+% A family of graphs $\mathcal{G}$ has the \defin{subquadratic grid minor property (SQGM)} if there exists constants $\alpha, c$, $\alpha >0$, $1\le c< 2$ such that, for any $t>0$ any graph $G\in\mathcal{G}$ that does not have a $t\times t$ grid minor has treewidth at most $\alpha t^c$.  Equivalently, any $G\in\mathcal{G}$ contains an $\Omega(\tw(G)^{1/c})\times \Omega(\tw(G)^{1/c})$ grid minor.
+
+% A more recently discovered property of planar graphs is that, for any planar graph $G$ there exists a graph $H$ of treewidth at most $8$ and a path $P$ such that $G$ is a subgraph of $H\boxtimes P$. This \defin{product structure property} of planar graphs has been used to solve a number of longstanding open problems on planar graphs \todo{references}.  Moreover, these solutions only use this product structure property which means they also apply to a number of non-planar graph classes including bounded genus graphs, apex-minor free graphs, bounded-degree graphs from minor-closed families, and $k$-planar for fixed $k$.\todo{references}
+
+Let $\mathcal{G}_t:=\{G:G\subseteq H\boxtimes P,\ \tw(H)\le t\}$, i.e., the subgraph-closed family of graphs that contains $H\boxtimes P$ for every graph $H$ of treewidth at most $t$ and every path $P$.  The original product structure theorem implies that $\mathcal{G}_8$ contains every planar graph.  It is natural to ask if, for every $t\in\N$, the class $\mathcal{G}_t$ has the SQGM property.  In this note we show that, unfortunately, this is not the case, even for the graph class $\mathcal{G}_1$.
+
+The \defin{$n$-star} $S_n$ is the tree having $n+1$ nodes and $n$ leaves. The \defin{$n$-path} $P_n$ is the path on $n$ vertices.
+
+\begin{thm}\label{lousy_theorem}
+  $\tw(S_n\boxtimes P_n)\in \Omega(n)$ and $\gm(S_n\boxtimes P_n)\in O(\sqrt{n})$.
+\end{thm}
+
+Since $\{S_n\boxtimes P_n: n\in\N\}$ is included in $\mathcal{G}_1$ and $\mathcal{G}_1\subseteq \mathcal{G}_t$ for each $t\in\N$, \cref{lousy_theorem} implies that $\mathcal{G}_t$ does not have the SQGM property for any $t\in\N$.
+
+
+\subsection{Proof of \cref{lousy_theorem}}
+
+\cref{lousy_theorem} is an immediate consequence of \cref{star_gridminor} and \cref{star_treewidth}, proven below. First we need a some definitions and notations.  We let $x_0$ denote the root of $S_n$ and $x_1,\ldots,x_n$ denote the leaves of $S_n$.  We let $y_1,\ldots,y_n$ denote the vertices of $P_n$, in the order they occur on $P_n$.
+
+For a graph $G$ that contains a graph $M$ as a minor, a \defin{model} of $M$ in $G$ is a sequence $(B_x:x\in V(M))$ of vertex-disjoint connected subgraph of $G$, indexed by the vertices of $M$ such that, for every edge $xy\in E(M)$ there exists an edge $vw\in E(G)$ with $v\in V(B_x)$ and $w\in V(B_y)$.  By definition, if $G$ contains $M$ as a minor, then there exists a model of $M$ in $G$.
+
+\begin{lem}\label{star_gridminor}
+  $\gm(S_n\boxtimes P_n)\le \sqrt{5n}$
+\end{lem}
+
+\begin{proof}
+  Suppose that $S_n\boxtimes P_n$ contains a $\boxplus_k$ grid minor.  We will prove that $k\le\sqrt{5n}$.  Let $\mathcal{M}:=(B_x:x\in V(\boxplus_k))$ be a model of $\boxplus_k$ in $G$.  We say that a piece $B_x$ of $\mathcal{M}$ is \defin{rooty} if $(x_0,y)\in V(B_x)$ for some $y\in V(P)$ and $B_x$ is \defin{rootless} otherwise.  Clearly, the number of rooty parts in $\mathcal{M}$ is at most $n$.
+
+  Observe that each rootless part $B_x$ of $\mathcal{M}$ is a single path $(x_i,y_j),\ldots,(x_i,y_{j+\ell})$.  There are at most two other rootless parts [one containing $(x_i,y_{j-1})$ and one containing $(x_i,y_{j+\ell+1})$] adjacent to $B_x$.  However, the vertex $x$ has degree at least $3$ in $\boxplus_k$, so $B_x$ must be adjacent to at least one rooty part $B_y$ such that $xy$ is an edge of $\boxplus_k$; we call this a \defin{rooty-rootless adjacency}. The model $\mathcal{M}$ has $k^2$ parts and at most $n$ of these are rooty, so there are at least $k^2-n$ rootless parts.  Therefore, there are at least $k^2-n$ rooty-rootless adjacencies.  Each rooty part of $\mathcal{M}$ can account for at most $4$ of these adjacencies, so $k^2-n \le 4n$, proving the result.\footnote{We could actually prove a bound of $\approx\sqrt{2n}$ by using the fact that most rootless parts need to be adjacent to $2$ rooty parts.}
+\end{proof}
+
+\begin{lem}\label{star_treewidth}
+  $\tw(S_n\boxtimes P_n) \ge (n-4)/3$
+\end{lem}
+
+\begin{proof}
+  Let $G:=S_n\boxtimes P_n$ and suppose that $\tw(G)=t$.  We will show that $t\ge (n-4)/3$. Since $\tw(G)=t$, there exists a \defin{separator} $X\subset V(G)$ of size at most $t+1$ such that $G-X$ has no component of size greater than $2|V(G)|/3=2n(n+1)/3$.  We partition the separator $X$ into two parts $X_0:=X\cap(\{x_0\}\times V(P_n)$ and $Y:=X\setminus X_0=X\cap(\{x_1,\ldots,x_n\}\times V(P_n))$.
+
+  For each $i\in\{0,\ldots,n\}$, let $P_i$ denote the path $(x_i,y_1),\ldots,(x_i,y_n)$.  Let $I:=\{i\in\{1,\ldots,n\}:Y\cap\{x_i\}\times V(P_n)\neq\emptyset\}$, let $\overline{I}:=\{1,\ldots,n\}\setminus I$, let $Y^+:= I\times\{y_1,\ldots,y_n\}$ and consider the subgraph $G':=G-Y^+$.
+
+  The separator $X$ must also be a separator of $G'$ in the sense that $G'-X$ has no component of size greater than $2|V(G)|/3$.  However, the vertices of $Y$ are not in $G'$, so $G'-X=G'-X_0$.  For any $i\in\overline{I}$, the entire path $P_i$ is contained in $G'-X_0$.
+
+  If $\{x_0\}\times \{y_1,\ldots,y_n\}\setminus X_0=\emptyset$, then $n=|X_0|\le t+1$, so $t\ge n-1\ge (n-4)/3$ and we are done.  Otherwise there exists some $(x_0,y_j)\in \{y_1,\ldots,y_n\}\setminus X_0$.  The vertex $(x_0,y_j)$ is in $G'$ and is adjacent, in $G'$, to the vertex $(x_i,y_j)$ of $P_i$, for each $i\in\overline{I}$.  Therefore, there is a single component of $G'-X_0$ that contains $\bigcup_{i\in \overline{I}} V(P_i)$.  This component has size at least
+  \[
+    n\cdot|\overline{I}| \ge n(n-t-1)
+  \]
+  But this component must have size at most $2n(n+1)/3$, so
+  \[
+    n(n-t-1) \le 2n(n+1)/3 \enspace ,
+  \]
+  % (n-t-1) \le 2(n+1)/3  [divide by n]
+  % (n-2n/3 - 4/3) \le t  [add t - 2n/3 - 1/3]
+  % (n/3 - 4/3) \le t     [simplify]
+  % (n-4)/3 \le t         []
+  and rewriting this implies that $t\ge (n-4)/3$.
+\end{proof}
+
+\begin{rem}
+  Note that \cref{lousy_theorem} does not even use the fact that $\mathcal{G}_t$ is closed under taking subgraphs.
+\end{rem}
+
+\begin{rem}
+  Note that the proofs of \cref{star_gridminor} and \cref{star_treewidth} do not use diagonal edges from the strong product, so they hold also for the Cartesian product.
+\end{rem}
+
+
+\subsection{Tightness}
+
+Can we prove that \cref{lousy_theorem} is tight?  Is it true that every $G\in \mathcal{G}_t$ contains a $\boxplus_k$ minor for $k\in\Omega(\sqrt{\tw(G)})$?  Here are two results proving the existence of large grid minors (actually subdivisions) in graph products.  Some of what comes next might be helpful, but there are too many distractions right now to think about whether they are actually helpful.  For a graph $G$, let $\gs(G)$ be the largest value $k$ such that $G$ contains a subdivision of $\boxplus_k$.  Clearly $\gm(G)\ge\gs(G)$.
+
+% Does there exists a constant $C$ such that $\gm(H\boxtimes P)=k$ implies that $
+
+\begin{lem}\label{star_times_path}
+    Let $P:=P_{n^2-n+1}$ be a path of length $n^2-n+1$, let $H$ be a graph, and let $x_1,\ldots,x_n$ be a sequence of distinct vertices in $H$ such that, for each $i\in\{1,\ldots,n-1\}$, $H$ contains a path $P_{i}$ from $x_i$ to $x_{i+1}$ that does not contain any vertex of $\{x_1,\ldots,x_n\}$ in its interior.  Then $\gs(H\boxtimes P)\ge n$.
+\end{lem}
+
+\begin{proof}
+    Let $G=H\boxtimes P$ and let $P:=y_1,\ldots,y_{n^2-n+1}$.  Our goal is to find a subdivision of $\boxplus_n$ inside of $G$.  To do this, The vertex $(i,j)\in\boxplus_n$ will map to the vertex $v_{i,j}:=(x_i,y_{i+(j-1)n})\in V(G)$.  For each $i\in\{1,\ldots,n\}$, the path $(i,1),(i,2),\ldots,(i,n)$ in $\boxplus_n$ will map to the subpath of $(x_i,y_1),\ldots,(x_i,y_{n^2-n+1})$ that begins at $v_{i,1}$ and ends at $v_{i,n}$.
+
+    Now consider some edge $(i,j)(i+1,j)$ of $\boxplus_n$ and let $P_i:=w_{i,0},\ldots,w_{i,d_i}$ be a path in $G$ from $w_{i,0}:=x_i$ to $w_{i,d_i}:=x_{i+1}$ that avoids $\{x_1,\ldots,x_n\}$.  Then the horizontal edge $(i,j)(i+1,j)$ maps onto the path
+    \[
+        (v_{i,0},y_{i+(j-1)n})(v_{i,1},y_{i+1+(j-1)n}),\ldots,(v_{i,d_i},y_{i+1+(j-1)n}) \enspace .
+    \]
+    where $v_0,\ldots,v_d$ is any path in $G$ from $x_{i}$ to $x_{i+1}$.
+\end{proof}
+
+\cref{star_times_path} did surprise me  because the condition on $H$ is satisfied even when $H$ is a star with leaves $x_1,\ldots,x_n$.  In fact, it's satisfied when $H$ is any tree with $n$ leaves.  Actually, if we take any connected graph $H$ with $n$ vertices and take any spanning tree $T$ of $H$, we get a tree that has at least $\sqrt{n}$ leaves or that has a path of length at least $\sqrt{n}$.  This gives the following corollary of \cref{star_times_path}:
+
+\begin{cor}\label{graph_times_path}
+  Let $H$ be any connected graph with $n$ vertices and let $P$ be a path of length $n$.  Then $\gs(H\boxtimes P)\ge \sqrt{n}$.
+\end{cor}
+
+% So \cref{star_times_path} implies that $\gm(H\boxtimes P)\ge\gs(H\boxtimes P)\ge\sqrt{\tw(H\boxtimes P)}$.  To get the subquadratic grid minor property we would only have to squeeze  an extra $\epsilon$ out of this argument.  Where could we squeeze out this extra $\epsilon$?  There is an asymmetry between the two cases in \cref{graph_times_path}:  If $H$ contains a path of length $\ell$, then $H\boxtimes P_\ell$ contains $\boxplus_\ell$ as a subgraph, so $\gs(H\boxtimes P_\ell)\ge \ell$.  On the other hand, if $H$ is a star with $\ell$ leaves, then \cref{graph_times_path} only implies that $\gs(H\boxtimes P_\ell)\ge \sqrt{\ell}$.  Is \cref{graph_times_path} tight in the second case?  Yes:
+%
+% \begin{lem}\label{star_times_path_tightness}
+%     For any star $S$ and any path $P$ with $\ell$ vertices, $\gm(S\boxtimes P)\le 2\sqrt{\ell}$.
+% \end{lem}
+%
+% \begin{proof}
+%     Let $G:=S\boxtimes P$ and suppose that $G$ contains a $\boxplus_k$ grid minor.  Let $\mathcal{M}:=(X_x:x\in V(\boxplus_k))$ be the model of $\boxplus_k$ in $G$.  Let $r$ denote the root of $S$.  We say that a piece $X_x$ is \defin{rooty} if $(r,y)\in V(X_x)$ for some $y\in V(P)$ and \defin{rootless} otherwise.  Clearly, the number of rooty parts in $\mathcal{M}$ is at most $\ell$.
+%
+%     Each rootless part in $\mathcal{M}$ is adjacent to at most two other rootless parts.  However, each part of $\mathcal{M}$ is adjacent to at least three other parts, so each rootless part is adjacent to at least one rooty part.  Each rooty part can account for at most $4$ of these adjacencies, so $k^2 \le 4\ell$, proving the result.\footnote{We could actually prove a bound of $\sqrt{2\ell}$ by using the fact that most rootless parts need to be adjacent to $2$ rooty parts.}
+% \end{proof}
+%
+% Again, \cref{star_times_path_tightness} doesn't prove or disprove anything, unless we can show that $\tw(S\boxtimes P)\in \Omega(\ell)$.  I suspect that this is indeed the case, so let's try to prove it.
+%
+% \begin{lem}
+%     For any star $S$ with $n$ leaves and any path $P$ with $n$ vertices, $\gm(S\boxtimes P)\in\Omega(\ell)$.
+% \end{lem}
+%
+% \begin{proof}
+%     Let $G:=S\boxtimes P$ and suppose that $\tw(G)=k\in o(n)$.  Let $P:=y_1,\ldots,y_n$, let $x_0$ be the root of $S$ and let $x_1,\ldots,x_n$ be the leaves of $S$. Since $\tw(G)=k$, there exists a separator $X\subset V(G)$ of size $k+1$ such that $G-S$ has no component of size greater than $2|V(G)|/3=2n(n+1)/3$.  Let $X_S:=\{x:(x,y)\in X,\, x\in\{1,\ldots,n\}\}$.  Consider the subgraph $G':=G-X_S$, which has $|V(G')|\ge n(n+1)-nk \in n(n+1)-o(n^2)$ vertices.  The separator $X$ must also be a separator of $G'$ in the sense that $G-X$ has no component of size greater than $2|V(G)|/3$.
+%
+%
+% \end{proof}
+
+
+
+% Alternatively, if $G$ has treewidth at least $\alpha t^c$ ($k$) then $G$ contains a $t\times t$ grid minor.
+
+Does the following question even make sense?
+
+\begin{op}
+  Let $\mathcal{G}$ be a graph family with the property that, for some fixed $\epsilon >0$, $\gm(G)\in\Omega(\tw(G)^{1/2+\epsilon})$, for each $G\in\mathcal{G}$.  Does this imply that that, for each $G\in\mathcal{G}$, $G\subseteq H\boxtimes P$ for some graph $H$ of treewidth at most $t:=t(\mathcal{G})$ and some path $P$?
+\end{op}
+
+One could start by considering the (easier?) case in which each $\epsilon = 1/2$.
+
+
+\newpage
+\section{Disk Graphs of Bounded Local Radius Have Product Structure}
+
+\citet{lokshtanov.panolan:framework} introduce the concept of the local radius of disk graphs.  They show that a number of optimization problems on arbitrary disk graphs can be efficiently reduced (with an $\epsilon$-approximation error) to the same problem on a disk graph of bounded local radius.
+
+Let $\mathcal{D}$ be a set of disks in the plane and let $A$ be the \defin{(dual) arrangement} graph of these disks.  That is, $V(A)$ consists of all the connected components of $\R^2\setminus(\bigcup_{D\in\mathcal{D}}\partial D)$ and $fg\in E(A)$ if there is exactly one disk $D\in\mathcal{D}$ such that $f\subseteq D$ and $g\cap D=\emptyset$.  For any $D\in\mathcal{D}$ let $A[D]:=A[\{f\in V(A): f\subseteq D\}]$ be the subgraph of $A$ induced by the regions contained in $D$.  The set $\mathcal{D}$ has \defin{local radius} at most $r$ if the radius of $A[D]$ is at most $r$ for each $D\in\mathcal{D}$.
+
+The \defin{intersection graph} $G$ of $\mathcal{D}$ is a graph with $V(G)=\mathcal{D}$. To provide a conceptual distinction between vertices of $G$ and disks in $D$ we will use, for example $v$ to refer to a vertex of $G$ and $D_v$ to refer to the disk in $\mathcal{D}$.  An edge $vw$ is in the intersection graph $G$ if and only if $D_v\cap D_w\neq\emptyset$.  If the et $\mathcal{D}$ of disks that defines $G$ has local radius at most $r$ then we say that $G$ has \defin{local radius} at most $r$.  We would like to prove the following result:
+
+\begin{thm}\label{radius_product}
+   If $G$ is a disk intersection graph of local radius at most $r$ then  $G\subseteq H\boxtimes P\boxtimes K_{O(r^2)}$ where $\tw(H)\in O(r^3)$ and $P$ is a path.
+\end{thm}
+
+Our starting point is the following result, which is a specialization of \citet[Theorem~7]{hickingbotham.wood:shallow}:
+
+\begin{thm}\label{h_w_shallow_minor}
+  If $G$ is a subgraph of $H\boxtimes P\boxtimes K_c$ and $G'$ is an $r$-shallow minor of $G$ then $G'$ is a subgraph of $H' \boxtimes P \boxtimes K_{O(cr)}$ where $\tw(H') \in O(r^{\tw(H)})$.
+\end{thm}
+
+The \defin{ply} of a set $\mathcal{D}$ of disks is $\max_{p\in\R^2}|\{D\in\mathcal{D}:p\in D\}|$.  We first show that bounded local radius implies bounded ply.
+
+\begin{lem}\label{ply}
+  If a set $\mathcal{D}$ of disks has local radius at most $r$ then the ply of $\mathcal{D}$ is at most $2r+1$.
+\end{lem}
+
+\begin{proof}
+  Suppose some set $S\subseteq\mathcal{D}$ of $k$ disks have a point $p\in \R^2$ in common.  The boundary of the union of disks in $S$ is a collection of circular arcs.  Let $q$ be a point in the interior of one of these arcs.  Then $q$ is on the boundary of exactly one disk $D$ in $S$.  Any curve with endpoints $p$ and $q$ must cross the boundaries of the $k-1$ disks in $S \setminus \{D\}$, so the diameter of $A[D]$ is at least $k-1$.  Therefore the radius of $A[D]$ is at least $(k-1)/2$ so $(k - 1)/2 \le r$ , so $k \le  2r+1$.
+\end{proof}
+
+\begin{proof}[Proof of \cref{radius_product}]
+  Let $\mathcal{D}$ be a set of disks of local radius $r$, let $A$ be the arrangement graph of $\mathcal{D}$ and let $G$ be the intersection graph of $\mathcal{D}$. Without loss of generality we may assume that no two disks in $\mathcal{D}$ have the same center, since a slight perturbation of the disks will not change the graph $G$.
+
+  For $v\in V(G)$ let $Y_v:=A[D_v]$.  Since $\mathcal{D}$ has local radius $r$,  the radius of $Y_v$ is at most $r$, for each $v\in V(G)$. By \cref{ply}, for each  $f\in V(A)$, there are at most $2r+1$ vertices $v\in V(G)$ such that $f\in V(Y_v)$.  For each $f\in V(A)$, choose any injective function $\phi_f: \{v \in V(G): f \in V(Y_v)\}\to\{1,...,2r+1\}$.
+
+  Now consider the graph $Q:=A \boxtimes K_{2r+1}$ where the vertices of $K_{2r+1}$ are the integers $\{1,...,2r+1\}$.  For each $v\in V(G)$, define $Y'_v$ as the subgraph of $Q$ induced by $\{(f, \phi_f(v)): f \in V(Y_v)\}$.  Since $Y_v$ is connected, so is $Y'_v$. For two distinct $v,w \in V(G)$, $Y_v$ and $Y_w$ are not necessarily disjoint.  However, the fact that $\phi_f$ is injective, for each $f\in V(A)$ implies that $Y'_v$ and $Y'_w$ are disjoint.  Furthermore, if $vw$ is an edge of $G$ then $Q$ contains an edge between $Y'_v$ and $Y'_w$.  Indeed, since $vw$ is an edge of $G$, $D_v$ and $D_w$ intersect, therefore $V(Y_v)\cap V(Y_w)\neq\emptyset$. Let $f$ be any element of $V(Y_v)\cap V(Y_w)$.  By the definition of strong product,  $(f,\phi_f(v))(f,\phi_f(w))$ is an edge of $Q$.
+
+  Therefore $\{Y'_v : v \in V(G)\}$ is an $r$-shallow model of (a supergraph of) $G$ in $Q$.   $A$ is a planar graph, so $A\subseteq H\boxtimes P\boxtimes K_3$ where $\tw(H)\le 3$. Therefore $Q=A\boxtimes K_{2r+1}\subseteq H\boxtimes P\boxtimes K_{6r+3}$ for same graph $H$ of treewidth at most $3$.  By \cref{h_w_shallow_minor}, $G$ is a subgraph of $H' \boxtimes P \boxtimes K_{O(r^2)}$ where $\tw(H') = O(r^3)$.
+\end{proof}
+
+
+\bibliographystyle{plainurlnat}
+\bibliography{ps-notes}
+
+
+\end{document}
